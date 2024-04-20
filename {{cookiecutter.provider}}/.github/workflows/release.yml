@@ -30,7 +30,7 @@ env:
   # PYPI REGISTRY THEN ENSURE THE PYPI_REPOSITORY_URL IS SET. IF YOU ARE USING AN API_TOKEN THEN
   # YOU DO NOT NEED TO CHANGE THE PYPI_USERNAME (__token__) , IF YOU ARE USING PASSWORD AUTHENTICATION THEN YOU WILL
   # NEED TO CHANGE TO USE THE CORRECT PASSWORD
-  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+  PYPI_PASSWORD: ""
   PYPI_USERNAME: "__token__"
   PYPI_REPOSITORY_URL: ""
   PUBLISH_PYPI: true
@@ -76,6 +76,9 @@ jobs:
     name: Publish SDKs
     runs-on: ubuntu-latest
     needs: publish_binary
+    permissions:
+      # For pypi trusted publishers.
+      id-token: write
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2
