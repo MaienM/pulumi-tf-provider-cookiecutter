@@ -13,6 +13,16 @@ Learn about the concepts behind [Pulumi Packages](https://www.pulumi.com/docs/gu
 
 ## Creating a Pulumi Terraform Bridge Provider
 
+### Flake
+
+Inside an empty git repository:
+
+```shell
+nix develop 'github:MaienM/pulumi-tf-provider-cookiecutter' --command cruft-init
+$EDITOR init.json
+nix develop 'github:MaienM/pulumi-tf-provider-cookiecutter' --command cruft-init
+```
+
 ### Prerequisites
 
 * Python version `>= 3.7`

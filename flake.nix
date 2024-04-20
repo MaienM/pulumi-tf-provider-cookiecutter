@@ -34,6 +34,61 @@
         });
       };
 
+      cruft-config-template = builtins.toFile "init.json" (builtins.toJSON {
+        terraform_provider_name = "NAME";
+        terraform_provider_org = "org";
+        terraform_provider_version_or_commit = "0.0.0";
+        terraform_provider_package_name = "internal/provider";
+        terraform_sdk_version = "plugin-framework";
+        provider_category = "utility";
+      });
+      cruft-init = pkgs.writeShellApplication {
+        name = "cruft-init";
+        runtimeInputs = [ cruft ];
+        text = ''
+          if [ "$(git ls-files | wc -l)" -gt 0 ]; then
+            >&2 echo "Directory must be empty."
+            exit 1
+          fi
+
+          if ! [ -f init.json ]; then
+            cp "${cruft-config-template}" init.json
+
+            name="''${PWD##*/}"
+            name="''${name#pulumi-}"
+            chmod +w init.json
+            sed -i "s/NAME/$name/" init.json
+
+            echo "Edit init.json and re-run cruft-init."
+            exit 0
+          fi
+
+          rm -f .gitignore
+          git reset .
+          git clean -df -e init.json
+
+          cruft create \
+            https://github.com/MaienM/pulumi-tf-provider-cookiecutter \
+            --output-dir=output \
+            --extra-context='{"terraform_provider_name":"'"$name"'"}' \
+            --extra-context-file=init.json \
+            "$@"
+
+          mv output/*/* .
+          mv output/*/.* .
+          rmdir output/*
+
+          git add flake.nix
+          nix flake lock
+
+          git add .
+          git reset init.json
+
+          echo "Project initialized, you can now commit and proceed to test/tweak things."
+          echo '> git commit -m "Init with cookiecutter template"'
+        '';
+      };
+
       make = pkgs.writeShellApplication {
         name = "make";
         runtimeInputs = with pkgs; [ gnumake ];
@@ -49,6 +104,7 @@
 
           # Base
           cruft
+          cruft-init
           make
           pulumi
           pulumictl
