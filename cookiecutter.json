@@ -13,7 +13,7 @@
 
     "provider": "pulumi-{{ cookiecutter.terraform_provider_name }}",
     "provider_display_name": "{{ cookiecutter.terraform_provider_name | capitalize }}",
-    "provider_github_organization": "pulumiverse",
+    "provider_github_organization": "MaienM",
     "provider_publisher": "{{ cookiecutter.provider_github_organization }}",
     "provider_homepage": "https://github.com/{{ cookiecutter.provider_github_organization }}/{{ cookiecutter.provider }}",
     "provider_logoUrl": "https://raw.githubusercontent.com/{{ cookiecutter.provider_github_organization }}/{{ cookiecutter.provider }}/main/docs/{{ cookiecutter.terraform_provider_name }}.png",
@@ -28,10 +28,10 @@
         "versioncontrol"
     ],
     "provider_download_url": "github://api.github.com/{{ cookiecutter.provider_github_organization }}/{{ cookiecutter.provider }}",
-    "provider_javascript_package": "@pulumiverse/{{ cookiecutter.terraform_provider_name }}",
-    "provider_dotnet_rootnamespace": "Pulumiverse",
-    "provider_python_package": "pulumiverse_{{ cookiecutter.terraform_provider_name }}",
-    "provider_java_base_package": "com.{{ cookiecutter.provider_github_organization }}",
+    "provider_javascript_package": "@maienm/pulumi-{{ cookiecutter.terraform_provider_name }}",
+    "provider_dotnet_rootnamespace": "MaienM",
+    "provider_python_package": "pulumi_{{ cookiecutter.terraform_provider_name }}",
+    "provider_java_base_package": "com.{{ cookiecutter.provider_github_organization | lower }}",
     "provider_mapping_strategy": [
         "automatic",
         "manual"
@@ -44,7 +44,7 @@
     "go_version": "{{ get_go_version() }}",
     "create_github_workflows": "yes",
     "skip_go_mod_tidy": "no",
-    "skip_git_init": "no",
+    "skip_git_init": "yes",
 
     "__pulumi_terraform_plugin_sdkv2_version": "v2.0.0-20240129205329-74776a5cd5f9",
     "__pulumi_terraform_bridge_version": "v3.73.0",

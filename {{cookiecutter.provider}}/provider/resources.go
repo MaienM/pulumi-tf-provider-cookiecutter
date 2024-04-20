@@ -264,6 +264,9 @@ func Provider() tfbridge.ProviderInfo {
 		},
 		CSharp: &tfbridge.CSharpInfo{
 			RootNamespace: "{{ cookiecutter.provider_dotnet_rootnamespace }}",
+			Namespaces: map[string]string{
+				"{{ cookiecutter.terraform_provider_name }}": "Pulumi{{ cookiecutter.terraform_provider_name | capitalize }}",
+			},
 
 			PackageReferences: map[string]string{
 				"Pulumi": "3.*",

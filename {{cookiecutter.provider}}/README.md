@@ -41,7 +41,7 @@ go get github.com/{{ cookiecutter.provider_github_organization }}/pulumi-{{ cook
 To use from .NET, install using `dotnet add package`:
 
 ```bash
-dotnet add package {{ cookiecutter.provider_dotnet_rootnamespace }}.{{ cookiecutter.terraform_provider_name | capitalize }}
+dotnet add package {{ cookiecutter.provider_dotnet_rootnamespace }}.Pulumi{{ cookiecutter.terraform_provider_name | capitalize }}
 ```
 
 ## Reference
