@@ -37,6 +37,7 @@
         "manual"
     ],
     "provider_naming_strategy": [
+        "explicit_modules",
         "singlelevel",
         "structured",
         "flat"

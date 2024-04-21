@@ -18,6 +18,9 @@ import (
 	_ "embed"
 	"fmt"
 	"path/filepath"
+{% if cookiecutter.provider_naming_strategy == "explicit_modules" %}
+	"sort"
+{% endif %}
 	"strings"
 	"unicode"
 
@@ -56,6 +59,51 @@ const (
 	mainMod = "index" // the {{ cookiecutter.terraform_provider_name }} module
 )
 
+{% if cookiecutter.provider_naming_strategy == "explicit_modules" %}
+type NameOverride struct {
+	Module string
+	Name   string
+}
+
+var prefix_module_map = map[string]string{
+}
+
+var overrides = map[string]NameOverride{
+}
+
+func convertName(tfname string) (module string, name string) {
+	contract.Assertf(strings.HasPrefix(tfname, "{{ cookiecutter.terraform_provider_name }}_"), "Invalid snake case name %s. Does not start with {{ cookiecutter.terraform_provider_name }}_", tfname)
+	tfname = strings.TrimPrefix(tfname, "{{ cookiecutter.terraform_provider_name }}_")
+
+	if v, ok := overrides[tfname]; ok {
+		module = v.Module
+		name = v.Name
+	} else {
+		keys := make([]string, 0)
+		for modnameSnake := range prefix_module_map {
+			keys = append(keys, modnameSnake)
+		}
+		sort.Slice(keys, func(i, j int) bool {
+			return len(keys[i]) < len(keys[j])
+		})
+
+		for _, prefix := range keys {
+			if tfname == prefix || tfname == prefix+"s" || tfname == prefix+"es" {
+				name = strcase.ToPascal(tfname)
+			} else if strings.HasPrefix(tfname, prefix+"_") {
+				name = strcase.ToPascal(strings.TrimPrefix(tfname, prefix+"_"))
+			} else {
+				continue
+			}
+			module = prefix_module_map[prefix]
+		}
+		contract.Assertf(len(module) > 0, "Name does not match any of the module names prefixes: %s", tfname)
+	}
+	contract.Assertf(!unicode.IsDigit(rune(module[0])), "Pulumi namespace must not start with a digit: %s", name)
+	contract.Assertf(!unicode.IsDigit(rune(name[0])), "Pulumi name must not start with a digit: %s", name)
+	return
+}
+{% else %}
 {% if cookiecutter.provider_naming_strategy != "flat" %}
 var module_overrides = map[string]string{}
 
@@ -95,6 +143,7 @@ func convertName(tfname string) (module string, name string) {
 	contract.Assertf(!unicode.IsDigit(rune(name[0])), "Pulumi name must not start with a digit: %s", name)
 	return
 }
+{% endif %}
 
 func makeDataSource(ds string) tokens.ModuleMember {
 	mod, name := convertName(ds)
