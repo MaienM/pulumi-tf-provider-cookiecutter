@@ -63,7 +63,7 @@
             exit 0
           fi
 
-          rm -f .gitignore
+          rm -rf .gitignore sdk
           git reset .
           git clean -df -e init.json
 

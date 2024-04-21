@@ -29,3 +29,10 @@ sdk/java/.gradle
 sdk/java/gradle
 sdk/java/gradlew
 sdk/java/gradlew.bat
+
+init.json
+sdk/*
+!sdk/go.mod
+provider/**/Pulumi.yaml
+provider/**/schema.json
+go.work.sum
