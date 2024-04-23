@@ -170,9 +170,9 @@ jobs:
         goversion:
           - {%endraw%}{{ cookiecutter.__go_version_major }}.{{ cookiecutter.__go_version_minor }}.x{%raw%}
         nodeversion:
-          - 16.x
+          - 18.x
         pythonversion:
-          - "3.9"
+          - "3.11"
         javaversion:
           - "11"
         language:
