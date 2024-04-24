@@ -18,11 +18,12 @@ import (
 	_ "embed"
 	"fmt"
 	"path/filepath"
-{% if cookiecutter.provider_naming_strategy == "explicit_modules" %}
-	"sort"
-{% endif %}
 	"strings"
 	"unicode"
+{% if cookiecutter.provider_naming_strategy == "explicit_modules" %}
+	pluralize "github.com/gertd/go-pluralize"
+	"sort"
+{% endif %}
 
 	"github.com/ettle/strcase"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
@@ -87,15 +88,25 @@ func convertName(tfname string) (module string, name string) {
 			return len(keys[i]) < len(keys[j])
 		})
 
+		pluralClient := pluralize.NewClient()
 		for _, prefix := range keys {
-			if tfname == prefix || tfname == prefix+"s" || tfname == prefix+"es" {
-				name = strcase.ToPascal(tfname)
-			} else if strings.HasPrefix(tfname, prefix+"_") {
-				name = strcase.ToPascal(strings.TrimPrefix(tfname, prefix+"_"))
-			} else {
+			prefixParts := strings.Split(prefix, "_")
+			prefixParts[len(prefixParts)-1] = pluralClient.Plural(prefixParts[len(prefixParts)-1])
+			prefixPlural := strings.Join(prefixParts, "_")
+
+			for _, prefix := range []string{prefix, prefixPlural} {
+				if tfname == prefix || tfname == prefixPlural {
+					name = strcase.ToPascal(tfname)
+				} else if strings.HasPrefix(tfname, prefix+"_") {
+					name = strcase.ToPascal(strings.TrimPrefix(tfname, prefix+"_"))
+				}
+			}
+			if name == "" {
 				continue
 			}
+
 			module = prefix_module_map[prefix]
+			break
 		}
 		contract.Assertf(len(module) > 0, "Name does not match any of the module names prefixes: %s", tfname)
 	}
