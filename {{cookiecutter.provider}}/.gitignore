@@ -36,3 +36,4 @@ sdk/*
 provider/**/Pulumi.yaml
 provider/**/schema.json
 go.work.sum
+upstream/
