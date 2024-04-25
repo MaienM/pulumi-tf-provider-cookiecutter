@@ -85,7 +85,7 @@ func convertName(tfname string) (module string, name string) {
 			keys = append(keys, modnameSnake)
 		}
 		sort.Slice(keys, func(i, j int) bool {
-			return len(keys[i]) < len(keys[j])
+			return len(keys[i]) > len(keys[j])
 		})
 
 		pluralClient := pluralize.NewClient()
