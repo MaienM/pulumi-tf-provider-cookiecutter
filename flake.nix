@@ -44,7 +44,7 @@
       });
       cruft-init = pkgs.writeShellApplication {
         name = "cruft-init";
-        runtimeInputs = [ cruft ];
+        runtimeInputs = [ cruft pkgs.go ];
         text = ''
           if [ "$(git ls-files | wc -l)" -gt 0 ]; then
             >&2 echo "Directory must be empty."
