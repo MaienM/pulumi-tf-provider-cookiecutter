@@ -41,6 +41,7 @@
         terraform_provider_package_name = "internal/provider";
         terraform_sdk_version = "plugin-framework";
         provider_category = "utility";
+        provider_naming_strategy = "explicit_modules";
       });
       cruft-init = pkgs.writeShellApplication {
         name = "cruft-init";
