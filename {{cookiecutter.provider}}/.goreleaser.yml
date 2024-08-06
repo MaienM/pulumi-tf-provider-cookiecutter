@@ -1,3 +1,4 @@
+version: 2
 archives:
   - id: archive
     name_template: {% raw %}'{{ .Binary }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}'
@@ -23,7 +24,7 @@ builds:
 {% endraw %}
     main: ./cmd/pulumi-resource-{{ cookiecutter.terraform_provider_name }}/
 changelog:
-  skip: true
+  disable: true
 release:
   disable: false
   prerelease: auto
